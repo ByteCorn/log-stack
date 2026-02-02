@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
 
   graylog:
-    image: graylog/graylog:latest
+    image: graylog/graylog:7.0
     environment:
       GRAYLOG_PASSWORD_SECRET: "8c6976e5b5410415bd"
       GRAYLOG_HTTP_EXTERNAL_URI: "http://graylog.local:9000/"
