@@ -10,7 +10,7 @@ services:
     image: opensearchproject/opensearch:latest
     environment:
       OPENSEARCH_JAVA_OPTS: '-Xms512m -Xmx512m'
-      OPENSEARCH_INITIAL_ADMIN_PASSWORD: 'Password.32bit'
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: 'Password.32bit:!'
       discovery.type: single-node
       bootstrap.memory_lock: true
       action.auto_create_index: false
@@ -32,7 +32,7 @@ services:
   graylog:
     image: graylog/graylog:7.0
     environment:
-      GRAYLOG_PASSWORD_SECRET: 'Password.32bit'
+      GRAYLOG_PASSWORD_SECRET: 'Password.32bit:!'
       GRAYLOG_ROOT_PASSWORD_SHA2: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' # Password: "admin"
       GRAYLOG_HTTP_BIND_ADDRESS: '0.0.0.0:9000'
       # GRAYLOG_HTTP_EXTERNAL_URI: 'http://127.0.0.1:9000/'
