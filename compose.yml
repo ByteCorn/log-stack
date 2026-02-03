@@ -10,22 +10,36 @@ services:
     image: opensearchproject/opensearch:latest
     environment:
       OPENSEARCH_JAVA_OPTS: '-Xms512m -Xmx512m'
-      OPENSEARCH_INITIAL_ADMIN_PASSWORD: '8c6976e5b5410415bd'
-    ulimits:
-      memlock: { soft: -1, hard: -1 }
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: 'Password.32bit'
+      discovery.type: single-node
+      bootstrap.memory_lock: true
+      action.auto_create_index: false
+      plugins.security.ssl.http.enabled: false
+      plugins.security.disabled: true
     volumes:
       - ./opensearch_data:/usr/share/opensearch/data
+    ports:
+      - "9200:9200"
+    ulimits:
+      memlock:
+        hard: -1
+        soft: -1
+      nofile:
+        soft: 65536
+        hard: 65536
     restart: unless-stopped
 
   graylog:
     image: graylog/graylog:7.0
     environment:
-      GRAYLOG_PASSWORD_SECRET: "8c6976e5b5410415bd"
-      GRAYLOG_HTTP_EXTERNAL_URI: "http://graylog.local:9000/"
-      GRAYLOG_ELASTICSEARCH_HOSTS: "http://opensearch:9200"
-      GRAYLOG_MONGODB_URI: "mongodb://mongodb:27017/graylog"
-      GRAYLOG_PROMETHEUS_EXPORTER_ENABLED: "true"
-      GRAYLOG_PROMETHEUS_EXPORTER_BIND_ADDRESS: "0.0.0.0:9833"
+      GRAYLOG_PASSWORD_SECRET: 'Password.32bit'
+      GRAYLOG_ROOT_PASSWORD_SHA2: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' # Password: "admin"
+      GRAYLOG_HTTP_BIND_ADDRESS: '0.0.0.0:9000'
+      # GRAYLOG_HTTP_EXTERNAL_URI: 'http://127.0.0.1:9000/'
+      GRAYLOG_ELASTICSEARCH_HOSTS: 'http://opensearch:9200'
+      GRAYLOG_MONGODB_URI: 'mongodb://mongodb:27017/graylog'
+      GRAYLOG_PROMETHEUS_EXPORTER_ENABLED: 'true'
+      GRAYLOG_PROMETHEUS_EXPORTER_BIND_ADDRESS: '0.0.0.0:9833'
     ports:
       - "9000:9000"
       - "12201:12201/udp"
