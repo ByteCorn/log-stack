@@ -4,6 +4,8 @@ services:
     image: mongo:7
     volumes:
       - ./mongo_data:/data/db
+    ports:
+      - "27017:27017"
     restart: unless-stopped
 
   opensearch:
@@ -36,8 +38,8 @@ services:
       GRAYLOG_ROOT_PASSWORD_SHA2: '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' # Password: "admin"
       GRAYLOG_HTTP_BIND_ADDRESS: '0.0.0.0:9000'
       # GRAYLOG_HTTP_EXTERNAL_URI: 'http://127.0.0.1:9000/'
-      GRAYLOG_ELASTICSEARCH_HOSTS: 'http://opensearch:9200'
-      GRAYLOG_MONGODB_URI: 'mongodb://mongodb:27017/graylog'
+      GRAYLOG_ELASTICSEARCH_HOSTS: 'http://opensearch.local:9200'
+      GRAYLOG_MONGODB_URI: 'mongodb://mongodb.local:27017/graylog'
       GRAYLOG_PROMETHEUS_EXPORTER_ENABLED: 'true'
       GRAYLOG_PROMETHEUS_EXPORTER_BIND_ADDRESS: '0.0.0.0:9833'
     ports:
@@ -45,6 +47,9 @@ services:
       - "12201:12201/udp"
       - "1514:1514/udp"
       - "9833:9833"
+    extra_hosts:
+      - "mongodb.local:host-gateway"
+      - "opensearch.local:host-gateway"
     depends_on:
       - mongodb
       - opensearch
