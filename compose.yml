@@ -90,6 +90,7 @@ services:
       - "5044:5044/tcp" # Beats
       - "5140:5140/tcp" # Syslog TCP
       - "5140:5140/udp" # Syslog UDP
+      - "9833:9833/tcp" # метрики Graylog
       - "12201:12201/tcp" # GELF TCP
       - "12201:12201/udp" # GELF UDP
       - "13301:13301/tcp" # Forwarder data
