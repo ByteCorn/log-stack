@@ -1,15 +1,14 @@
-x-logging-gelf: &gelf-logging
+x-logging: &default-logging
   logging:
-    driver: gelf
+    driver: "json-file"
     options:
-      gelf-address: "udp://host.docker.internal:12201"
-      tag: "infra-{{.Name}}" # автоматически добавит имя контейнера в тег
-
+      max-size: "10m"
+      max-file: "3"
 
 services:
 
   mongodb:
-    <<: *gelf-logging
+    <<: *default-logging
     image: mongo:7
     volumes:
       - ./mongodb_data:/data/db
@@ -18,8 +17,22 @@ services:
       - "27017:27017"
     restart: unless-stopped
 
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.47.2
+    environment:
+      MONGODB_URI: "mongodb://mongodb.local:27017"
+    ports:
+      - "9216:9216"
+    extra_hosts:
+      - "mongodb.local:host-gateway"
+    links:
+      - mongodb:mongodb
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+
   opensearch:
-    <<: *gelf-logging
+    <<: *default-logging
     image: opensearchproject/opensearch:2
     environment:
       OPENSEARCH_JAVA_OPTS: '-Xms512m -Xmx512m'
@@ -43,7 +56,7 @@ services:
     restart: unless-stopped
 
   opensearch-dashboards:
-    <<: *gelf-logging
+    <<: *default-logging
     image: opensearchproject/opensearch-dashboards:2
     environment:
       OPENSEARCH_HOSTS: 'http://opensearch:9200'
@@ -55,7 +68,7 @@ services:
     restart: unless-stopped
 
   graylog:
-    <<: *gelf-logging
+    <<: *default-logging
     image: graylog/graylog:7.0
     environment:
       GRAYLOG_PASSWORD_SECRET: 'Password.32bit:!'
