@@ -42,6 +42,7 @@ services:
       action.auto_create_index: false
       plugins.security.ssl.http.enabled: false
       plugins.security.disabled: true
+      cluster.routing.allocation.disk.threshold_enabled: false # это отключит проверку места, но если диск физически кончится, база данных может повредиться
     volumes:
       - ./opensearch_data:/usr/share/opensearch/data
     ports:
