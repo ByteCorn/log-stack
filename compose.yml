@@ -1,6 +1,15 @@
+x-logging-gelf: &gelf-logging
+  logging:
+    driver: gelf
+    options:
+      gelf-address: "udp://host.docker.internal:12201"
+      tag: "infra-{{.Name}}" # автоматически добавит имя контейнера в тег
+
+
 services:
 
   mongodb:
+    <<: *gelf-logging
     image: mongo:7
     volumes:
       - ./mongodb_data:/data/db
@@ -10,6 +19,7 @@ services:
     restart: unless-stopped
 
   opensearch:
+    <<: *gelf-logging
     image: opensearchproject/opensearch:2
     environment:
       OPENSEARCH_JAVA_OPTS: '-Xms512m -Xmx512m'
@@ -33,6 +43,7 @@ services:
     restart: unless-stopped
 
   opensearch-dashboards:
+    <<: *gelf-logging
     image: opensearchproject/opensearch-dashboards:2
     environment:
       OPENSEARCH_HOSTS: 'http://opensearch:9200'
@@ -44,6 +55,7 @@ services:
     restart: unless-stopped
 
   graylog:
+    <<: *gelf-logging
     image: graylog/graylog:7.0
     environment:
       GRAYLOG_PASSWORD_SECRET: 'Password.32bit:!'
