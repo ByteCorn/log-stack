@@ -85,7 +85,7 @@ services:
     volumes:
       - ./graylog_data:/usr/share/graylog/data/data
       - ./graylog_journal:/usr/share/graylog/data/journal
-    network_mode: bridge
+    network_mode: host
     ports:
       - "9000:9000/tcp" # Graylog web interface and REST API
       - "5044:5044/tcp" # Beats
