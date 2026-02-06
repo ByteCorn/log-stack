@@ -55,7 +55,7 @@ services:
     volumes:
       - ./vector.toml:/etc/vector/vector.toml:ro
     ports:
-      - "24224:24224"
+      - "127.0.0.1:24224:24224" # локальный приёмник
     depends_on:
       - opensearch
     restart: unless-stopped

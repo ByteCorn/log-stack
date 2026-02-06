@@ -5,19 +5,11 @@
 [transforms.processing]
   type = "remap"
   inputs = ["docker_in"]
-  source = """
-  .container_name = replace(string!(.tag), "docker.", "")
-  .timestamp = now()
-  if can_be_parsed_as_json(.message) {
-      .data = parse_json!(.message)
-  }
-  del(.tag)
-  """
+  source = ".container_name = replace(string!(.tag), \"monitoring-\", \"\")"
 
 [sinks.to_opensearch]
   type = "elasticsearch"
   inputs = ["processing"]
   endpoint = "http://opensearch:9200"
-  mode = "bulk"
-  index = "logs-{{ container_name }}-%Y-%m-%d"
+  index = "monitoring-logs-%Y-%m-%d"
   suppress_type_name = true
