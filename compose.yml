@@ -16,6 +16,7 @@ services:
     environment:
       OPENSEARCH_JAVA_OPTS: -Xms1g -Xmx1g
       KV_PASSWORD: admin
+      DISABLE_SECURITY_PLUGIN: true 
     volumes:
       - ./wazuh_indexer_data:/var/lib/wazuh-indexer
     ulimits:

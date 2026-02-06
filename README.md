@@ -1,6 +1,9 @@
 # log-stack
 
-Централизованное журналирование
+SIEM c централизованным журналированием
 
+# Устанавливаем владельца (UID 1000 - это пользователь wazuh/opensearch)
+chown -R 1000:1000 ./wazuh_indexer_data ./wazuh_etc ./wazuh_logs
 
-chmod 777 graylog_journal graylog_data mongodb_config mongodb_data opensearch_data
+# На всякий случай даем права на чтение/запись
+chmod -R 750 ./wazuh_indexer_data ./wazuh_etc ./wazuh_logs
