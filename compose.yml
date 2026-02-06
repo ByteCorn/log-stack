@@ -41,6 +41,7 @@ services:
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: 'true'
       I18N_LOCALE: 'ru-RU'
       DATA_SOURCE_ENABLED: "true"
+      OPENSEARCH_DASHBOARDS_DATA_SOURCE_ENABLED: "true" 
       WORKSPACE_ENABLED: "true"
       EXPLORE_ENABLED: "true"
     ports:
