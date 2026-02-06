@@ -6,11 +6,8 @@
   type = "remap"
   inputs = ["docker_in"]
   source = """
-  # Определяем имя контейнера
   .container_name = replace(string!(.tag), "docker.", "")
   .timestamp = now()
-
-  # Парсим JSON если он есть
   if can_be_parsed_as_json(.message) {
       .data = parse_json!(.message)
   }
@@ -20,16 +17,7 @@
 [sinks.to_indexer]
   type = "elasticsearch"
   inputs = ["processing"]
-  endpoint = "https://wazuh-indexer:9200"
+  endpoint = "http://wazuh-indexer:9200" # БЕЗ HTTPS
   mode = "bulk"
-  
-  auth.strategy = "basic"
-  auth.user = "admin"
-  auth.password = "admin"
-
-  # Пропуск проверок SSL для работы с самоподписанными сертификатами v5.0.0
-  tls.verify_certificate = false
-  tls.verify_hostname = false
-
-  index = "docker-logs-{{ container_name }}-%Y-%m-%d"
+  index = "logs-{{ container_name }}-%Y-%m-%d"
   suppress_type_name = true
