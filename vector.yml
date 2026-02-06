@@ -1,0 +1,55 @@
+---
+
+data_dir: "/var/lib/vector"
+
+api:
+  enabled: true
+  address: "0.0.0.0:8686"
+
+## источники данных
+sources:
+  internal_metrics:
+    type: internal_metrics
+  docker_logs:
+    type: docker_logs
+  fluent_in:
+    type: fluent
+    address: "0.0.0.0:24224" # Принимает данные от Fluentd/Fluent Bit
+
+
+# ## преобразования(опциональный блок для парсинга JSON) - раскомментируйте этот блок, если логи из Docker или Fluent приходят в JSON формате
+# transforms:
+#   parse_json:
+#     type: remap
+#     inputs:
+#       - docker_logs
+#       - fluent_in
+#     source: |
+#       # Пытаемся распарсить поле 'message' или 'log' как JSON
+#       if exists(.message) && is_parseable_json!(.message) {
+#         . = merge(., parse_json!(.message))
+#         . = remove(.message)
+#       }
+
+## приемники
+sinks:
+  prometheus_metrics:
+    type: prometheus_exporter
+    inputs:
+      - internal_metrics
+    address: "0.0.0.0:9160"
+
+  all_logs_to_opensearch:
+    type: elasticsearch
+    # если вы раскомментировали блок 'parse_json', измените inputs на:
+    # inputs: [ "parse_json" ]
+    inputs:
+      - docker_logs    # Логи из Docker
+      - fluent_in      # Логи от Fluent
+    endpoint: "http://opensearch:9200"
+    bulk.action: create
+    index: "logs-%Y.%m.%d" # Будет logs-2026.02.06
+    compression: gzip
+    batch:
+      max_events: 200
+      timeout_secs: 5

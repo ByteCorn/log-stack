@@ -57,9 +57,11 @@ services:
     container_name: vector
     hostname: vector
     volumes:
-      - ./vector.toml:/etc/vector/vector.toml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./vector.yml:/etc/vector/vector.yml
     ports:
-      - "127.0.0.1:24224:24224" # локальный приёмник
+      - "0.0.0.0:9160:9160" # метрики
+      - "0.0.0.0:24224:24224" # локальный приёмник
     depends_on:
       - opensearch
     restart: unless-stopped

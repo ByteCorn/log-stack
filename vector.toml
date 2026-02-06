@@ -1,11 +1,18 @@
 data_dir = "/var/lib/vector"
 
+[api]
+  enabled = true
+  address = "0.0.0.0:8686"
+
 ##
 ## Sources
 ##
 
 [sources.internal_metrics]
   type = "internal_metrics"
+
+[sources.docker]
+  type = "docker_logs"
 
 [sources.fluent]
   type = "fluent"
@@ -22,7 +29,7 @@ data_dir = "/var/lib/vector"
 [sinks.prometheus]
   type = "prometheus_exporter"
   inputs = ["internal_metrics"]
-  address = "0.0.0.0:9090"
+  address = "0.0.0.0:9160"
 
 [sinks.elasticsearch]
   type = "elasticsearch"
@@ -31,3 +38,14 @@ data_dir = "/var/lib/vector"
   mode = "bulk"
   index = "logs-%Y.%m.%d"
   compression = "gzip"
+
+
+[sinks.opensearch]
+  type = "elasticsearch"
+  inputs = ["docker"]
+  endpoint = "http://opensearch:9200"
+  index = "logs-docker"
+  mode = "bulk"
+  compression = "none"
+  batch.max_events = 200
+  batch.timeout_secs = 5
