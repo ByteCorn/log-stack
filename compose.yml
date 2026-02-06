@@ -5,12 +5,12 @@ x-logging: &default-logging
       max-size: "10m"
       max-file: "3"
 
-
 services:
 
   # ХРАНИЛИЩЕ
   wazuh-indexer:
-    image: wazuh/wazuh-indexer:5.0.0
+    <<: *default-logging
+    image: wazuh/wazuh-indexer:4.9.2
     container_name: wazuh-indexer
     hostname: wazuh-indexer
     environment:
@@ -25,7 +25,8 @@ services:
 
   # УПРАВЛЕНИЕ
   wazuh-manager:
-    image: wazuh/wazuh-manager:5.0.0
+    <<: *default-logging
+    image: wazuh/wazuh-manager:4.9.2
     container_name: wazuh-manager
     hostname: wazuh-manager
     environment:
@@ -41,7 +42,8 @@ services:
 
   # ВИЗУАЛИЗАЦИЯ
   wazuh-dashboard:
-    image: wazuh/wazuh-dashboard:5.0.0
+    <<: *default-logging
+    image: wazuh/wazuh-dashboard:4.9.2
     container_name: wazuh-dashboard
     hostname: wazuh-dashboard
     environment:
@@ -58,6 +60,7 @@ services:
 
   # СБОРЩИК
   vector:
+    <<: *default-logging
     image: timberio/vector:0.34.1-debian
     container_name: vector
     hostname: vector
