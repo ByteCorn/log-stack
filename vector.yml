@@ -39,7 +39,8 @@ sinks:
       - internal_metrics
     address: "0.0.0.0:9160"
 
-  all_logs_to_opensearch:
+sinks:
+  to_opensearch:
     type: elasticsearch
     # если вы раскомментировали блок 'parse_json', измените inputs на:
     # inputs: [ "parse_json" ]
@@ -47,9 +48,12 @@ sinks:
       - docker_logs    # Логи из Docker
       - fluent_in      # Логи от Fluent
     endpoint: "http://opensearch:9200"
-    bulk.action: create
-    index: "logs-%Y.%m.%d" # Будет logs-2026.02.06
-    compression: gzip
+    suppress_type_name: true
+    bulk:
+      index: "logs-%Y.%m.%d"
+      action: create
+    request:
+      compression: gzip
     batch:
       max_events: 200
       timeout_secs: 5
