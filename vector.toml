@@ -14,10 +14,10 @@
   del(.tag)
   """
 
-[sinks.to_indexer]
+[sinks.to_opensearch]
   type = "elasticsearch"
   inputs = ["processing"]
-  endpoint = "http://wazuh-indexer:9200" # БЕЗ HTTPS
+  endpoint = "http://opensearch:9200"
   mode = "bulk"
   index = "logs-{{ container_name }}-%Y-%m-%d"
   suppress_type_name = true
