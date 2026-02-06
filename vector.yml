@@ -46,7 +46,7 @@ sinks:
     inputs:
       - docker_logs    # Логи из Docker
       - fluent_in      # Логи от Fluent
-    endpoint: "http://172.17.0.1:9200"
+    endpoint: "http://opensearch:9200"
     bulk.action: create
     index: "logs-%Y.%m.%d" # Будет logs-2026.02.06
     compression: gzip

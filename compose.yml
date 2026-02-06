@@ -10,6 +10,8 @@ services:
   opensearch:
     <<: *default-logging
     image: opensearchproject/opensearch:latest
+    container_name: opensearch
+    hostname: opensearch
     environment:
       OPENSEARCH_JAVA_OPTS: '-Xms512m -Xmx512m'
       OPENSEARCH_INITIAL_ADMIN_PASSWORD: 'Password.32bit:!'
@@ -36,6 +38,8 @@ services:
   opensearch-dashboards:
     <<: *default-logging
     image: opensearchproject/opensearch-dashboards:latest
+    container_name: opensearch-dashboards
+    hostname: opensearch-dashboards
     environment:
       OPENSEARCH_HOSTS: '["http://opensearch:9200"]'
       DISABLE_SECURITY_DASHBOARDS_PLUGIN: 'true'
@@ -60,8 +64,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./vector.yml:/etc/vector/vector.yml
     ports:
-      - "0.0.0.0:9160:9160" # метрики
-      - "0.0.0.0:24224:24224" # локальный приёмник
+      - "9160:9160" # метрики
+      - "24224:24224" # локальный приёмник
     depends_on:
       - opensearch
     restart: unless-stopped
