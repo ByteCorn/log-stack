@@ -39,7 +39,6 @@ sinks:
       - internal_metrics
     address: "0.0.0.0:9160"
 
-sinks:
   to_opensearch:
     type: elasticsearch
     # если вы раскомментировали блок 'parse_json', измените inputs на:
