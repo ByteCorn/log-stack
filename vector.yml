@@ -1,36 +1,17 @@
 ---
-
 data_dir: "/var/lib/vector"
-
-api:
-  enabled: true
-  address: "0.0.0.0:8686"
 
 ## источники
 sources:
-  internal_metrics:
-    type: internal_metrics
   docker_logs:
     type: docker_logs
-  fluent_in:
-    type: fluent
-    address: "0.0.0.0:24224" # Принимает данные от Fluentd/Fluent Bit
-
-## преобразования
 
 ## приемники
 sinks:
-  prometheus_metrics:
-    type: prometheus_exporter
-    inputs:
-      - internal_metrics
-    address: "0.0.0.0:9160"
-
   to_opensearch:
     type: elasticsearch
     inputs:
-      - docker_logs    # Логи из Docker
-      - fluent_in      # Логи от Fluent
+      - docker_logs
     endpoint: "http://opensearch:9200"
     suppress_type_name: true
     bulk:
